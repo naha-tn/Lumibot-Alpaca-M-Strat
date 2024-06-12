@@ -1,0 +1,31 @@
+name: Run Python Script
+
+on:
+  schedule:
+    - cron: '1 * * * *' # At 00:00 on Monday
+  workflow_dispatch:
+
+env:
+  api_key: ${{ secrets.API_KEY }}
+  api_secret: ${{ secrets.API_SECRET }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo content
+        uses: actions/checkout@v3 # checkout the repository content to github runner
+
+      - name: setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12' # install the python version needed
+          
+      - name: install python packages
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          
+      - name: execute py script # run main.py
+        run: python tradingbot.py
+          
